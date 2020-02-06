@@ -41,12 +41,15 @@ h1{
 }
 
 img.display{
-  height:200px;
-  width:200px;
-  display:none;
-
-
+  height:300px;
+  width:300px;
+  display: none;
 }
+img.displayDefault{
+  height:300px;
+  width:300px;
+}
+
 .pic{
   display:none;
   width:40px;
@@ -71,18 +74,22 @@ img.display{
       $("#display1").show();
       $("#display3").hide();
       $("#display2").hide();
+      $("#display4").hide();
+
 
     });
     $("#row2").on("mouseenter", function() {
       $("#display1").hide();
       $("#display3").show();
       $("#display2").hide();
+      $("#display4").hide();
 
     });
     $("#row3").on("mouseenter", function() {
       $("#display1").hide();
       $("#display3").hide();
       $("#display2").show();
+      $("#display4").hide();
 
     });
   });
@@ -137,10 +144,11 @@ img.display{
 </div>
 
 <div class = "divDisplay" style="display: inline-block">
-  <img src="sun.png"  id = "display1" class = "display" alt="Italian Trulli">
+
+  <img src="sun.png"  id = "display1" class = "display" alt="aiai">
   <img  src="QXDDJGh.jpg"  id = "display2" class = "display" alt="aiai">
   <img src="IMG_5117.PNG" id = "display3" class = "display" alt="aiai">
-
+  <img src="pelo.jpg" id = "display4" class = "displayDefault" alt="aiai">
 
 </div>
 </body>
