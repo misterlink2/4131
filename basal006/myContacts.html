@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Contacts</title>
+
+<style>
+html{
+  background-color: grey;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  margin:auto;
+}
+#table1 {
+
+  margin:20px;
+  border-style: solid;
+  border-width: 5px;
+  border-color: white;
+  background-color: blue;
+  padding: 20px;
+  font-size: 20px;
+  text-align: left;
+  /* border: 1px solid #dddddd */
+}
+td, th {
+  border: 1px solid #dddddd
+}
+tr{
+  height:75px;
+}
+tr:nth-child(even) {background-color: #f2f2f2;}
+tr:nth-child(odd) {background-color: lightblue;}
+h1{
+  color: white;
+}
+
+img.display{
+  height:200px;
+  width:200px;
+  display:none;
+
+
+}
+.pic{
+  display:none;
+  width:40px;
+  height:40px;
+}
+
+.row:hover .pic {
+  display:block;
+}
+.divDisplay{
+  margin:100px;
+}
+#div1{
+  display:inline-block;
+  margin-left:100px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $("#row1").on("mouseenter", function() {
+      $("#display1").show();
+      $("#display3").hide();
+      $("#display2").hide();
+
+    });
+    $("#row2").on("mouseenter", function() {
+      $("#display1").hide();
+      $("#display3").show();
+      $("#display2").hide();
+
+    });
+    $("#row3").on("mouseenter", function() {
+      $("#display1").hide();
+      $("#display3").hide();
+      $("#display2").show();
+
+    });
+  });
+</script>
+<body>
+<div id ="table1">
+  <div style="display: inline-block">
+    <a href= "myContacts.html" style="color:white;">My Contacts</a>
+  </div>
+  <div style="display: inline-block">
+    <a href ="myWidgets.html" style="color:white;">My Widgets</a>
+  </div>
+</div>
+<h1>My Contacts</h1>
+<div id="div1">
+  <table>
+    <tr>
+      <th >name</th>
+      <th>email</th>
+      <th>address</th>
+      <th>phone number</th>
+      <th>favorite place</th>
+    </tr>
+    <tr>
+      <td class = "row" id = "row1">joe
+        <img src="sun.png" class = "pic"  id = "pic1" alt="aiai">
+      </td>
+      <td>leam008@umn.edu</td>
+      <td>3132 james ave s</td>
+      <td>224 475 9405</td>
+      <td><a href ="https://www.google.com/maps/place/3132+James+Ave+S,+Minneapolis,+MN+55408/@44.9454115,-93.3058523,17z/data=!3m1!4b1!4m5!3m4!1s0x87f6277bd53d82c1:0xef5f879840e515ce!8m2!3d44.9454115!4d-93.3036636" >his home</a></td>
+    </tr>
+    <tr>
+      <td class = "row" id = "row2">andy
+        <img src="IMG_5117.PNG" class = "pic"  id = "pic2" alt="aiai">
+      </td>
+      <td>joh6666@umn.edu</td>
+      <td>tangletown</td>
+      <td>612 650 0341</td>
+      <td><a href= "https://www.google.com/maps/place/Kenneth+H.+Keller+Hall,+200+Union+St+SE,+Minneapolis,+MN+55455/@44.9747577,-93.2347029,17z/data=!4m13!1m7!3m6!1s0x52b32d17b13a375b:0x6c04b616cb83af04!2sKenneth+H.+Keller+Hall,+200+Union+St+SE,+Minneapolis,+MN+55455!3b1!8m2!3d44.9747577!4d-93.2325142!3m4!1s0x52b32d17b13a375b:0x6c04b616cb83af04!8m2!3d44.9747577!4d-93.2325142">keller hall!</a></td>
+    </tr>
+    <tr>
+      <td class = "row" id = "row3">derek
+        <img  src="QXDDJGh.jpg" class = "pic" id = "pic3" alt="aiai">
+      </td>
+      <td>cleme633@umn.edu</td>
+      <td>old town road, gurnee</td>
+      <td>847 356 2257</td>
+      <td><a href="https://www.google.com/maps/place/Texas+Roadhouse/@44.8089815,-94.4884117,8z/data=!4m8!1m2!2m1!1stexas+roadhouse!3m4!1s0x52b45f170defe021:0x682b9b733db0bbed!8m2!3d45.5510401!4d-94.2202536">texas roadhouse</a></td>
+    </tr>
+  </table>
+</div>
+
+<div class = "divDisplay" style="display: inline-block">
+  <img src="sun.png"  id = "display1" class = "display" alt="Italian Trulli">
+  <img  src="QXDDJGh.jpg"  id = "display2" class = "display" alt="aiai">
+  <img src="IMG_5117.PNG" id = "display3" class = "display" alt="aiai">
+
+
+</div>
+</body>
+</html>
