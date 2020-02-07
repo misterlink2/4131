@@ -7,6 +7,21 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Widgets</title>
 <style>
+html{
+  background-color: grey;
+}
+#table1 {
+
+  margin:20px;
+  border:0px;
+  border-style: solid;
+  border-width: 5px;
+  border-color: white;
+  background-color: blue;
+  padding: 20px;
+  font-size: 20px;
+  text-align: left;
+}
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -15,34 +30,39 @@ table {
 #youtube{
   border: 0
 }
-#table1 {
+/* #table1 {
   width: 25px;
 }
 td, th {
   border: 1px solid #dddddd
-}
+} */
 </style>
-<div id ="table1">
-  <div>
-    <a href= "myContacts.html">My Contacts</a>
+<body>
+  <div id ="table1">
+    <div style="display: inline-block">
+      <a href= "myContacts.html" style="color:white;">My Contacts</a>
+    </div>
+    <div style="display: inline-block">
+      <a href ="myWidgets.html" style="color:white;">My Widgets</a>
+    </div>
+    <div style="display: inline-block">
+      <a href ="myForm.html" style="color:white;">Form Input</a>
+    </div>
   </div>
-  <div>
-    <a href ="myWidgets.html">My Widgets</a>
-  </div>
-</div>
-<ol>
-  <li id = "youtube">youtube playlist
-    <iframe width="500" height="350"
-src="https://www.youtube.com/embed/videoseries?list=PLMFoDoF5WCjivNyZjSOWfzjD4TyFbvqhu"
- allow="utoplay; encrypted-media" allowfullscreen></iframe>
-  </li>
-  <li>twitter<blockquote class="twitter-tweet">
-      <p lang="en" dir="ltr">Me leaving the house without eating breakfast, dehydrated, and with 2 hours of sleep
-        <a href="https://t.co/jvYom7Wy07">pic.twitter.com/jvYom7Wy07</a>
-      </p>&mdash; Lil $us (@heyyy_sus)
-      <a href="https://twitter.com/heyyy_sus/status/1102451802262233088?ref_src=twsrc%5Etfw">March 4, 2019
-      </a>
-    </blockquote> <script async src="https://platform.twitter.com/widgets.js"></script>
-  </li>
-</ol>
+  <ol>
+    <li id = "youtube">youtube playlist
+      <iframe width="500" height="350"
+  src="https://www.youtube.com/embed/videoseries?list=PLMFoDoF5WCjivNyZjSOWfzjD4TyFbvqhu"
+   allow="utoplay; encrypted-media" allowfullscreen></iframe>
+    </li>
+    <li>twitter<blockquote class="twitter-tweet">
+        <p lang="en" dir="ltr">Me leaving the house without eating breakfast, dehydrated, and with 2 hours of sleep
+          <a href="https://t.co/jvYom7Wy07">pic.twitter.com/jvYom7Wy07</a>
+        </p>&mdash; Lil $us (@heyyy_sus)
+        <a href="https://twitter.com/heyyy_sus/status/1102451802262233088?ref_src=twsrc%5Etfw">March 4, 2019
+        </a>
+      </blockquote> <script async src="https://platform.twitter.com/widgets.js"></script>
+    </li>
+  </ol>
+</body>
 </html>
