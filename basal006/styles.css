@@ -4,7 +4,8 @@ html{
 #map{
   background-color: white;
   height: 400px;
-  width: 500px;
+  width: 600px;
+
 
 }
 #checker{
@@ -21,6 +22,17 @@ html{
 
   grid-template-columns: auto auto;
 
+}
+.grid{
+  display:grid;
+  grid-gap: 50px;
+  grid-template-columns: auto auto auto;
+
+}
+
+.grid-item1{
+  grid-column-start: 2;
+  grid-column-end: 3;
 }
 
 table {
