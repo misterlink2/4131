@@ -3,41 +3,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<head>
+
   <link rel="stylesheet" href="styles.css">
   <title>Contacts</title>
 
-</head>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script>
-  $(document).ready(function() {
-    $("#row1").on("mouseenter", function() {
-      $("#display1").show();
-      $("#display3").hide();
-      $("#display2").hide();
-      $("#display4").hide();
-
-
-    });
-    $("#row2").on("mouseenter", function() {
-      $("#display1").hide();
-      $("#display3").show();
-      $("#display2").hide();
-      $("#display4").hide();
-
-    });
-    $("#row3").on("mouseenter", function() {
-      $("#display1").hide();
-      $("#display3").hide();
-      $("#display2").show();
-      $("#display4").hide();
-
-    });
-  });
-</script>
 <body>
-<div id ="table1">
+
+  <script type = "text/javascript">
+  var pause;
+  function showSlide(){
+    var pic = document.getElementById("display4");
+    var i = 0;
+    var imageList = ["sun.png", "QXDDJGh.jpg", "IMG_5117.PNG","pelo.jpg"]
+
+    function showNewPic() {
+        if (i >= imageList.length-1){
+          i = 0;
+        }
+        else{
+          i++;
+        }
+
+        pic.src = imageList[i];
+    }
+
+  pause =  setInterval(function() { showNewPic()}, 2000);
+  }
+  function stopSlide(){
+    clearInterval(pause);
+    document.getElementById("display4").src= "pelo.jpg";
+
+
+  }
+  </script>
+<script>
+  var map;
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 44.97399, lng: -93.2299172},
+      zoom: 8
+    });
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOxsD0SOOUU9eIQJ2P67c318MQIJ7zAYE&callback=initMap"
+async defer></script>
+<div id = "table1">
   <div style="display: inline-block">
     <a href= "myContacts.html" style="color:white;">My Contacts</a>
   </div>
@@ -49,6 +60,9 @@
   </div>
 </div>
 <h1>My Contacts</h1>
+
+<div class = "grid-container">
+
 <div id="div1">
   <table>
     <tr  class = "theTables">
@@ -87,14 +101,16 @@
     </tr>
   </table>
 </div>
-
-<div class = "divDisplay" style="display: inline-block">
-
-  <img src="sun.png"  id = "display1" class = "display" alt="aiai">
-  <img  src="QXDDJGh.jpg"  id = "display2" class = "display" alt="aiai">
-  <img src="IMG_5117.PNG" id = "display3" class = "display" alt="aiai">
+<div class = "grid-item">
   <img src="pelo.jpg" id = "display4" class = "displayDefault" alt="aiai">
+  <button onclick="showSlide()">Start</button>
+  <button onclick="stopSlide()">stop</button>
+</div>
+<div class = "grid-item" id = "left"></div>
+<div class = "grid-item" id = "map"></div>
 
 </div>
+
+
 </body>
 </html>

@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang = "en">
     <link rel="stylesheet" href="styles.css">
-
-  </head>
-
+  <title>Form</title>
   <body>
     <div id ="table1">
       <div style="display: inline-block">
@@ -27,31 +24,31 @@
         <tr>
           <td>Name</td>
           <td>
-              <input type="text" name="name" placeholder="name">
+              <input type="text" name="name" placeholder="name" required pattern="[a-zA-Z0-9\s]+">
           </td>
         </tr>
         <tr>
           <td>Email</td>
           <td>
-              <input type="text" name="email" placeholder="email">
+              <input type="email" name="email" placeholder="email" required>
           </td>
         </tr>
         <tr>
           <td>Address</td>
           <td>
-              <input type="text" name="address" placeholder="address">
+              <input type="text" name="address" placeholder="address" required>
           </td>
         </tr>
         <tr>
           <td>Favorite Place</td>
           <td>
-              <input type="text" name="place" placeholder="place">
+              <input type="text" name="place" placeholder="place" required pattern="[a-zA-Z0-9\s]+">
           </td>
         </tr>
         <tr>
           <td>URL</td>
           <td>
-              <input type="text" name="URL" placeholder="URL">
+              <input type="url" name="url" placeholder="URL" required>
           </td>
         </tr>
         <tr>

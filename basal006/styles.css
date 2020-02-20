@@ -1,6 +1,27 @@
 html{
   background-color: grey;
 }
+#map{
+  background-color: white;
+  height: 400px;
+  width: 500px;
+
+}
+#checker{
+  background-color: white;
+  width: 75%;
+  border-color: black;
+  border-radius: 10px;
+  text-align: center;
+  height: 100px;
+}
+.grid-container{
+  display:grid;
+  grid-gap: 50px;
+
+  grid-template-columns: auto auto;
+
+}
 
 table {
   font-family: arial, sans-serif;
@@ -61,6 +82,11 @@ img.displayDefault{
 }
 .divDisplay{
   margin:100px;
+  display:none;
+}
+.divDisplay.active{
+  margin:100px;
+  display: block;
 }
 #div1{
   display:inline-block;
