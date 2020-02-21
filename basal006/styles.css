@@ -8,6 +8,28 @@ html{
 
 
 }
+#form1{
+  background-color: white;
+  height: 400px;
+  border-radius: 10px;
+}
+#searchForm{
+  background-color: white;
+
+  margin-top: 25px;
+}
+#separator{
+  margin-top: 25px;
+
+  background-color: blue;
+  height:25px;
+
+}
+
+#directionForm{
+  margin-top: 25px;
+
+}
 #checker{
   background-color: white;
   width: 75%;

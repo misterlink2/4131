@@ -104,8 +104,12 @@
  var map;
  var service;
  var infowindow;
+ var markers = [];
 
  function initMap() {
+
+  var directionsService = new google.maps.DirectionsService();
+  var directionsRenderer = new google.maps.DirectionsRenderer();
    var uOfM = new google.maps.LatLng(44.9783 , -93.2332 );
    infowindow = new google.maps.InfoWindow();
    map = new google.maps.Map(
@@ -114,21 +118,66 @@
    var geocoder = new google.maps.Geocoder();
    geocodeAddress(geocoder, map);
    searchQuery();
+   directionsRenderer.setMap(map);
+
+   var onChangeHandler = function() {
+     calculateAndDisplayRoute(directionsService, directionsRenderer);
+   };
+
+  document.getElementById('search').addEventListener('click', onChangeHandler);
  }
 
+ function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+   var travel;
+   var ele = document.getElementsByName('mode');
+
+           for(i = 0; i < ele.length; i++) {
+               if(ele[i].checked){
+                 travel = ele[i].value;
+                 console.log(ele[i].value);
+               }
+           }
+         directionsService.route(
+             {
+               origin: {query: "1108 4th se st, minneapolis, mn"},
+               destination: {query: document.getElementById('end').value},
+               travelMode: travel
+             },
+             function(response, status) {
+               if (status === 'OK') {
+                 directionsRenderer.setDirections(response);
+               } else {
+                 window.alert('Directions request failed due to ' + status);
+               }
+             });
+       }
 
  function searchQuery(){
-     query = document.getElementById("search").value;
-     console.log(query);
-      var request = {
-        query: query,
-        locationBias: {radius: 100, center: {lat: 44.9783 , lng: -93.2332}},
-        fields: ['name', 'geometry'],
-      };
+    clearMarkers();
+     type = document.getElementById("select").value;
+     extra = document.getElementById("extra").value;
+     radius = document.getElementById("radius").value;
+    var request;
+    if(extra == null){
+      request = {
+          location:  {lat: 44.9783, lng:  -93.2332},
+          radius: radius,
+          type: type,
+
+        };
+    } else {
+      request = {
+          location:  {lat: 44.9783, lng:  -93.2332},
+          radius: radius,
+          type: type,
+          keyword: extra
+        };
+    }
+
 
       service = new google.maps.places.PlacesService(map);
 
-      service.findPlaceFromQuery(request, function(results, status) {
+      service.nearbySearch(request, function(results, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           for (var i = 0; i < results.length; i++) {
             createMarker(results[i]);
@@ -137,15 +186,31 @@
           map.setCenter(results[0].geometry.location);
         }
       });
+  }
 
+ function setMapOnAll(map) {
+   for (var i = 0; i < markers.length; i++) {
+     markers[i].setMap(map);
+   }
  }
 
+ function clearMarkers() {
+   setMapOnAll(null);
+ }
+
+ function showMarkers() {
+   setMapOnAll(map);
+ }
+ function deleteMarkers() {
+   clearMarkers();
+   markers = [];
+ }
  function createMarker(place) {
    var marker = new google.maps.Marker({
      map: map,
      position: place.geometry.location
    });
-
+   markers.push(marker);
    google.maps.event.addListener(marker, 'click', function() {
      infowindow.setContent(place.name);
      infowindow.open(map, this);
@@ -155,20 +220,30 @@
 
 
 
-  function geocodeAddress(geocoder, resultsMap) {
-    for (i=0;i<mapList.length;i++){
-      geocoder.geocode({'address': mapList[i]}, function(results, status) {
-        if (status === 'OK') {
-          resultsMap.setCenter(results[0].geometry.location);
-          createMarker(results[0]);
+function geocodeAddress(geocoder, resultsMap) {
+  for (i=0;i<mapList.length;i++){
+    geocoder.geocode({'address': mapList[i]}, function(results, status) {
+      if (status === 'OK') {
+        if (results[0]) {
+                map.setZoom(14);
+                var marker = new google.maps.Marker({
+                  position: results[0].geometry.location,
+                  map: map
+                });
+                markers.push(marker);
+                google.maps.event.addListener(marker, 'click', function() {
+                  infowindow.setContent(results[0].formatted_address);
+                  infowindow.open(map, marker);
+                });
+              }
 
-        } else {
-          alert('Geocode was not successful for the following reason: ' + status);
-        }
-      });
-    }
-
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
   }
+
+}
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOxsD0SOOUU9eIQJ2P67c318MQIJ7zAYE&libraries=places&callback=initMap"
 async defer></script>
@@ -182,10 +257,37 @@ async defer></script>
   <div class = "grid-item" id = "left"></div>
   <div class = "grid-item1" id = "map"></div>
   <div class = "grid-item" id="form1">
-    <form>
-      <input type="text" id="search" />
-      <input type="button" value="Calculate" onclick="searchQuery()" />
+    <form id = "searchForm">
+      <input type="text" placeholder="Enter Other Places" id="extra" />
+      <input type="text" placeholder="Radius" id="radius" value = "0" />
+
+      <select id="select" name="select" value ="">
+        <option value="restaurant">Restaurant</option>
+        <option value="liquor_store">Liquor store</option>
+        <option value="cafe">Cafe</option>
+        <option value="gym">Gym</option>
+        <option value="convenience_store">Convenience store</option>
+        <option value="stadium">Stadium</option>
+      </select>
+      <input type="button" value="Find" onclick="searchQuery()" />
     </form>
+    <div id = "separator"></div>
+    <form id = "directionForm">
+        <input type="radio" id="walk" name="mode" value="WALKING">
+        <label for="walk">Walk</label><br>
+
+        <input type="radio" id="drive" name="mode" value="DRIVING">
+        <label for="drive">Drive</label><br>
+
+        <input type="radio" id="transit" name="mode" value="TRANSIT">
+        <label for="transit">Transit</label>
+
+        <input type="text" placeholder="destination" id="end" />
+        <input type="button" id = "search" value="direct"  />
+
+
+    </form>
+
   </div>
 
 </div>
