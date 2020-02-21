@@ -113,23 +113,31 @@
 
    var geocoder = new google.maps.Geocoder();
    geocodeAddress(geocoder, map);
+   searchQuery();
+ }
 
-   var request = {
-     query: 'andrea',
-     fields: ['name', 'geometry'],
-   };
 
-   service = new google.maps.places.PlacesService(map);
+ function searchQuery(){
+     query = document.getElementById("search").value;
+     console.log(query);
+      var request = {
+        query: query,
+        locationBias: {radius: 100, center: {lat: 44.9783 , lng: -93.2332}},
+        fields: ['name', 'geometry'],
+      };
 
-   service.findPlaceFromQuery(request, function(results, status) {
-     if (status === google.maps.places.PlacesServiceStatus.OK) {
-       for (var i = 0; i < results.length; i++) {
-         createMarker(results[i]);
-       }
+      service = new google.maps.places.PlacesService(map);
 
-       map.setCenter(results[0].geometry.location);
-     }
-   });
+      service.findPlaceFromQuery(request, function(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+          }
+
+          map.setCenter(results[0].geometry.location);
+        }
+      });
+
  }
 
  function createMarker(place) {
@@ -173,7 +181,12 @@ async defer></script>
 <div class = "grid">
   <div class = "grid-item" id = "left"></div>
   <div class = "grid-item1" id = "map"></div>
-  <div class = "grid-item" id="form1"></div>
+  <div class = "grid-item" id="form1">
+    <form>
+      <input type="text" id="search" />
+      <input type="button" value="Calculate" onclick="searchQuery()" />
+    </form>
+  </div>
 
 </div>
 
