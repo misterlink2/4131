@@ -8,6 +8,13 @@ html{
 
 
 }
+#left{
+  background-color: white;
+  height: 400px;
+  width: 300px;
+  border-radius: 10px;
+  overflow:scroll;
+}
 #form1{
   background-color: white;
   height: 400px;
