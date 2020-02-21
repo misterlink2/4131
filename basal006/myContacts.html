@@ -67,7 +67,7 @@
         <img src="sun.png" class = "pic"  id = "pic1" alt="aiai">
       </td>
       <td>leam008@umn.edu</td>
-      <td>3132 james ave s</td>
+      <td>frontier hall</td>
       <td>224 475 9405</td>
       <td><a href ="https://www.google.com/maps/place/3132+James+Ave+S,+Minneapolis,+MN+55408/@44.9454115,-93.3058523,17z/data=!3m1!4b1!4m5!3m4!1s0x87f6277bd53d82c1:0xef5f879840e515ce!8m2!3d44.9454115!4d-93.3036636" >his home</a></td>
     </tr>
@@ -76,7 +76,7 @@
         <img src="IMG_5117.PNG" class = "pic"  id = "pic2" alt="aiai">
       </td>
       <td>joh6666@umn.edu</td>
-      <td>tangletown</td>
+      <td>peik hall</td>
       <td>612 650 0341</td>
       <td><a href= "https://www.google.com/maps/place/Kenneth+H.+Keller+Hall,+200+Union+St+SE,+Minneapolis,+MN+55455/@44.9747577,-93.2347029,17z/data=!4m13!1m7!3m6!1s0x52b32d17b13a375b:0x6c04b616cb83af04!2sKenneth+H.+Keller+Hall,+200+Union+St+SE,+Minneapolis,+MN+55455!3b1!8m2!3d44.9747577!4d-93.2325142!3m4!1s0x52b32d17b13a375b:0x6c04b616cb83af04!8m2!3d44.9747577!4d-93.2325142">keller hall!</a></td>
     </tr>
@@ -85,7 +85,7 @@
         <img  src="QXDDJGh.jpg" class = "pic" id = "pic3" alt="aiai">
       </td>
       <td>cleme633@umn.edu</td>
-      <td>old town road, gurnee</td>
+      <td>keller hall</td>
       <td>847 356 2257</td>
       <td><a href="https://www.google.com/maps/place/Texas+Roadhouse/@44.8089815,-94.4884117,8z/data=!4m8!1m2!2m1!1stexas+roadhouse!3m4!1s0x52b45f170defe021:0x682b9b733db0bbed!8m2!3d45.5510401!4d-94.2202536">texas roadhouse</a></td>
     </tr>
@@ -99,70 +99,61 @@
   var derekLocation = table.rows[3].cells[2].innerHTML;
 
   var mapList = [joeLocation,andyLocation,derekLocation];
-  console.log(mapList);
 
 
-  var austin = {lat: 44.97, lng: -93.229};
-  // function initMap() {
-  //   var directionsService = new google.maps.DirectionsService();
-  //   var directionsRenderer = new google.maps.DirectionsRenderer();
-  //
-  //   var map = new google.maps.Map(document.getElementById('map'), {
-  //     zoom: 8,
-  //     center: {lat: 44.97, lng: -93.229}
-  //   });
-  //   var geocoder = new google.maps.Geocoder();
-  //   geocodeAddress(geocoder, map);
-  //
-  // }
-  function initMap() {
-          var directionsRenderer = new google.maps.DirectionsRenderer;
-          var directionsService = new google.maps.DirectionsService;
-          var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 7,
-            center: {lat: 41.85, lng: -87.65}
-          });
-          directionsRenderer.setMap(map);
-          directionsRenderer.setPanel(document.getElementById('right-panel'));
+ var map;
+ var service;
+ var infowindow;
 
-          var control = document.getElementById('floating-panel');
-          control.style.display = 'block';
-          map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
+ function initMap() {
+   var uOfM = new google.maps.LatLng(44.9783 , -93.2332 );
+   infowindow = new google.maps.InfoWindow();
+   map = new google.maps.Map(
+       document.getElementById('map'), {center: uOfM, zoom: 15});
 
-          var onChangeHandler = function() {
-            calculateAndDisplayRoute(directionsService, directionsRenderer);
-          };
-          document.getElementById('start').addEventListener('change', onChangeHandler);
-          document.getElementById('end').addEventListener('change', onChangeHandler);
-        }
+   var geocoder = new google.maps.Geocoder();
+   geocodeAddress(geocoder, map);
 
-    function calculateAndDisplayRoute(directionsService, directionsRenderer) {
-      var start = document.getElementById('start').value;
-      var end = document.getElementById('end').value;
-      directionsService.route({
-        origin: start,
-        destination: end,
-        travelMode: 'DRIVING'
-      }, function(response, status) {
-        if (status === 'OK') {
-          directionsRenderer.setDirections(response);
-        } else {
-          window.alert('Directions request failed due to ' + status);
-        }
-      });
-    }
+   var request = {
+     query: 'andrea',
+     fields: ['name', 'geometry'],
+   };
+
+   service = new google.maps.places.PlacesService(map);
+
+   service.findPlaceFromQuery(request, function(results, status) {
+     if (status === google.maps.places.PlacesServiceStatus.OK) {
+       for (var i = 0; i < results.length; i++) {
+         createMarker(results[i]);
+       }
+
+       map.setCenter(results[0].geometry.location);
+     }
+   });
+ }
+
+ function createMarker(place) {
+   var marker = new google.maps.Marker({
+     map: map,
+     position: place.geometry.location
+   });
+
+   google.maps.event.addListener(marker, 'click', function() {
+     infowindow.setContent(place.name);
+     infowindow.open(map, this);
+   });
+ }
+
+
 
 
   function geocodeAddress(geocoder, resultsMap) {
-    //var address = derekLocation;
     for (i=0;i<mapList.length;i++){
       geocoder.geocode({'address': mapList[i]}, function(results, status) {
         if (status === 'OK') {
           resultsMap.setCenter(results[0].geometry.location);
-          var marker = new google.maps.Marker({
-            map: resultsMap,
-            position: results[0].geometry.location
-          });
+          createMarker(results[0]);
+
         } else {
           alert('Geocode was not successful for the following reason: ' + status);
         }
@@ -171,7 +162,7 @@
 
   }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOxsD0SOOUU9eIQJ2P67c318MQIJ7zAYE&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOxsD0SOOUU9eIQJ2P67c318MQIJ7zAYE&libraries=places&callback=initMap"
 async defer></script>
   <div class = "grid-item">
     <img src="pelo.jpg" id = "display4" class = "displayDefault" alt="aiai">
@@ -182,40 +173,7 @@ async defer></script>
 <div class = "grid">
   <div class = "grid-item" id = "left"></div>
   <div class = "grid-item1" id = "map"></div>
-  <div id="floating-panel">
-        <strong>Start:</strong>
-        <select id="start">
-          <option value="chicago, il">Chicago</option>
-          <option value="st louis, mo">St Louis</option>
-          <option value="joplin, mo">Joplin, MO</option>
-          <option value="oklahoma city, ok">Oklahoma City</option>
-          <option value="amarillo, tx">Amarillo</option>
-          <option value="gallup, nm">Gallup, NM</option>
-          <option value="flagstaff, az">Flagstaff, AZ</option>
-          <option value="winona, az">Winona</option>
-          <option value="kingman, az">Kingman</option>
-          <option value="barstow, ca">Barstow</option>
-          <option value="san bernardino, ca">San Bernardino</option>
-          <option value="los angeles, ca">Los Angeles</option>
-        </select>
-        <br>
-        <strong>End:</strong>
-        <select id="end">
-          <option value="chicago, il">Chicago</option>
-          <option value="st louis, mo">St Louis</option>
-          <option value="joplin, mo">Joplin, MO</option>
-          <option value="oklahoma city, ok">Oklahoma City</option>
-          <option value="amarillo, tx">Amarillo</option>
-          <option value="gallup, nm">Gallup, NM</option>
-          <option value="flagstaff, az">Flagstaff, AZ</option>
-          <option value="winona, az">Winona</option>
-          <option value="kingman, az">Kingman</option>
-          <option value="barstow, ca">Barstow</option>
-          <option value="san bernardino, ca">San Bernardino</option>
-          <option value="los angeles, ca">Los Angeles</option>
-        </select>
-      </div>
-      <div id="right-panel"></div>
+  <div class = "grid-item" id="form1"></div>
 
 </div>
 
