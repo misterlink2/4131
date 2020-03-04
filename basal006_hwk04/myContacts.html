@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="stylesheet" href="styles.css">
+  <title>Contacts</title>
+
+
+<body>
+
+  <script type = "text/javascript">
+  var pause;
+  function showSlide(){
+    var pic = document.getElementById("display4");
+    var i = 0;
+    var imageList = [  "QXDDJGh.jpg","sun.png","IMG_5117.PNG"]
+
+    function showNewPic() {
+        if (i >= imageList.length-1){
+          i = 0;
+        }
+        else{
+          i++;
+        }
+
+        pic.src = imageList[i];
+    }
+
+  pause =  setInterval(function() { showNewPic()}, 2000);
+  }
+  function stopSlide(){
+    clearInterval(pause);
+    document.getElementById("display4").src= "pelo.jpg";
+
+
+  }
+  </script>
+
+<div id = "table1">
+  <div style="display: inline-block">
+    <a href= "myContacts.html" style="color:white;">My Contacts</a>
+  </div>
+  <div style="display: inline-block">
+    <a href ="myWidgets.html" style="color:white;">My Widgets</a>
+  </div>
+  <div style="display: inline-block">
+    <a href ="myForm.html" style="color:white;">Form Input</a>
+  </div>
+</div>
+<h1>My Contacts</h1>
+
+<div class = "grid">
+
+<div id="div1">
+  <table id = "contacts">
+    <tr  class = "theTables">
+      <th >name</th>
+      <th>email</th>
+      <th>address</th>
+      <th>phone number</th>
+      <th>favorite place</th>
+    </tr>
+    <tr class = "theTables">
+      <td class = "row" id = "row1">joe
+        <img src="sun.png" class = "pic"  id = "pic1" alt="aiai">
+      </td>
+      <td>leam008@umn.edu</td>
+      <td>701 Fulton St SE, Minneapolis, MN 55455</td>
+      <td>224 475 9405</td>
+      <td><a href ="https://www.google.com/maps/place/3132+James+Ave+S,+Minneapolis,+MN+55408/@44.9454115,-93.3058523,17z/data=!3m1!4b1!4m5!3m4!1s0x87f6277bd53d82c1:0xef5f879840e515ce!8m2!3d44.9454115!4d-93.3036636" >his home</a></td>
+    </tr>
+    <tr class = "theTables">
+      <td class = "row" id = "row2">andy
+        <img src="IMG_5117.PNG" class = "pic"  id = "pic2" alt="aiai">
+      </td>
+      <td>joh6666@umn.edu</td>
+      <td>116 Church St SE, Minneapolis, MN 55455</td>
+      <td>612 650 0341</td>
+      <td><a href= "https://www.google.com/maps/place/Kenneth+H.+Keller+Hall,+200+Union+St+SE,+Minneapolis,+MN+55455/@44.9747577,-93.2347029,17z/data=!4m13!1m7!3m6!1s0x52b32d17b13a375b:0x6c04b616cb83af04!2sKenneth+H.+Keller+Hall,+200+Union+St+SE,+Minneapolis,+MN+55455!3b1!8m2!3d44.9747577!4d-93.2325142!3m4!1s0x52b32d17b13a375b:0x6c04b616cb83af04!8m2!3d44.9747577!4d-93.2325142">keller hall!</a></td>
+    </tr>
+    <tr class = "theTables">
+      <td class = "row" id = "row3">derek
+        <img  src="QXDDJGh.jpg" class = "pic" id = "pic3" alt="aiai">
+      </td>
+      <td>cleme633@umn.edu</td>
+      <td>2106 S 4th St, Minneapolis, MN 55455</td>
+      <td>847 356 2257</td>
+      <td><a href="https://www.google.com/maps/place/Texas+Roadhouse/@44.8089815,-94.4884117,8z/data=!4m8!1m2!2m1!1stexas+roadhouse!3m4!1s0x52b45f170defe021:0x682b9b733db0bbed!8m2!3d45.5510401!4d-94.2202536">texas roadhouse</a></td>
+    </tr>
+  </table>
+</div>
+<script>
+var image = "ai.png";
+
+  var map;
+  var table = document.getElementById("contacts");
+  var joeLocation = table.rows[1].cells[2].innerHTML;
+  var andyLocation = table.rows[2].cells[2].innerHTML;
+  var derekLocation = table.rows[3].cells[2].innerHTML;
+
+  var mapList = [joeLocation,andyLocation,derekLocation];
+  var nameList = ["joe","andy","derek"];
+ var map;
+ var service;
+ var infowindow;
+ var infoWindow2;
+ var markers = [];
+ var currentLatLng;
+ var currentLat;
+ var currentLng;
+
+ function initMap() {
+
+  var directionsService = new google.maps.DirectionsService();
+  var directionsRenderer = new google.maps.DirectionsRenderer();
+  directionsRenderer.setPanel(document.getElementById('left'));
+
+   var uOfM = new google.maps.LatLng(44.9783 , -93.2332 );
+   infowindow = new google.maps.InfoWindow();
+   map = new google.maps.Map(
+       document.getElementById('map'), {center: uOfM, zoom: 16});
+
+   var geocoder = new google.maps.Geocoder();
+   geocodeAddress(geocoder, map);
+   //searchQuery();
+   directionsRenderer.setMap(map);
+
+   var onChangeHandler = function() {
+     createRoute(directionsService, directionsRenderer);
+   };
+   var resetDirection = function() {
+     searchQuery(directionsService, directionsRenderer);
+   };
+   document.getElementById('query').addEventListener('click', resetDirection);
+
+  document.getElementById('search').addEventListener('click', onChangeHandler);
+  infoWindow2 = new google.maps.InfoWindow;
+
+  // Try HTML5 geolocation.
+         if (navigator.geolocation) {
+           navigator.geolocation.getCurrentPosition(function(position) {
+             var pos = {
+               lat: position.coords.latitude,
+               lng: position.coords.longitude
+             };
+             currentLat = position.coords.latitude;
+             currentLng = position.coords.longitude;
+              currentLatLng = position.coords.latitude.toString() + ", " + position.coords.longitude.toString() ;
+
+           }, function() {
+             handleLocationError(true, infoWindow2, map.getCenter());
+           });
+         } else {
+           // Browser doesn't support Geolocation
+           handleLocationError(false, infoWindow2, map.getCenter());
+         }
+       }
+ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+   currentLatLng = "44.9783 , -93.2332"
+   currentLat = 44.9783;
+   currentLng = -93.2332;
+ }
+
+
+ function createRoute(directionsService, directionsRenderer) {
+   directionsRenderer.setMap(map);
+
+   clearMarkers();
+  console.log(currentLatLng);
+   var travel;
+   var ele = document.getElementsByName('mode');
+
+           for(i = 0; i < ele.length; i++) {
+               if(ele[i].checked){
+                 travel = ele[i].value;
+                 console.log(ele[i].value);
+               }
+           }
+         directionsService.route(
+             {
+               origin: {query: currentLatLng },
+               destination: {query: document.getElementById('end').value},
+               travelMode: travel
+             },
+             function(response, status) {
+               if (status === 'OK') {
+                 directionsRenderer.setDirections(response);
+               } else {
+                 window.alert('Directions request failed due to ' + status);
+               }
+             });
+       }
+
+ function searchQuery(directionsService, directionsRenderer){
+  var request;
+   directionsRenderer.setMap(null)
+    clearMarkers();
+     type = document.getElementById("select").value;
+     extra = document.getElementById("extra").value;
+     radius = document.getElementById("radius").value;
+     if (type == "other"){
+       request = {
+           location:  {lat: currentLat, lng:  currentLng},
+           radius: radius,
+           type: type,
+           keyword: extra
+         };
+     }
+     else {
+       request = {
+           location:  {lat: currentLat, lng:  currentLng},
+           radius: radius,
+           type: type,
+
+         };
+     }
+    console.log(type);
+    console.log(extra);
+    console.log(radius);
+
+
+
+    // if(extra == null){
+    //   request = {
+    //       location:  {lat: currentLat, lng:  currentLng},
+    //       radius: radius,
+    //       type: type,
+    //
+    //     };
+    // } else {
+    //   request = {
+    //       location:  {lat: currentLat, lng:  currentLng},
+    //       radius: radius,
+    //       type: type,
+    //       keyword: extra
+    //     };
+    // }
+
+
+      service = new google.maps.places.PlacesService(map);
+
+      service.nearbySearch(request, function(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+          }
+
+          map.setCenter(results[0].geometry.location);
+        }
+      });
+  }
+
+ function setMapOnAll(map) {
+   for (var i = 0; i < markers.length; i++) {
+     markers[i].setMap(map);
+   }
+ }
+
+ function clearMarkers() {
+   setMapOnAll(null);
+ }
+
+ function showMarkers() {
+   setMapOnAll(map);
+ }
+ function deleteMarkers() {
+   clearMarkers();
+   markers = [];
+ }
+ function createMarker(place) {
+   var marker = new google.maps.Marker({
+     map: map,
+     position: place.geometry.location
+
+   });
+   markers.push(marker);
+   google.maps.event.addListener(marker, 'click', function() {
+     infowindow.setContent(place.name);
+     infowindow.open(map, this);
+   });
+ }
+
+
+
+
+function geocodeAddress(geocoder, resultsMap) {
+  var name1 = table.rows[1].cells[0].innerHTML;
+  var name2= table.rows[2].cells[0].innerHTML;
+  var name3 = table.rows[3].cells[0].innerHTML;
+  nameList = [name1,name2,name3];
+  for (i=0;i<mapList.length;i++){
+    geocoder.geocode({'address': mapList[i]}, function(results, status) {
+      if (status === 'OK') {
+        if (results[0]) {
+                map.setZoom(14);
+                var marker = new google.maps.Marker({
+                  position: results[0].geometry.location,
+                  map: map,
+                  icon:image
+
+                });
+                markers.push(marker);
+                google.maps.event.addListener(marker, 'click', function() {
+                  infowindow.setContent( results[0].formatted_address);
+                  infowindow.open(map, marker);
+                });
+              }
+
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }
+
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOxsD0SOOUU9eIQJ2P67c318MQIJ7zAYE&libraries=places&callback=initMap"
+async defer></script>
+  <div class = "grid-item2">
+    <img src="pelo.jpg" id = "display4" class = "displayDefault" alt="aiai">
+    <button class = "button1" onclick="showSlide()">Start</button>
+    <button class = "button1" onclick="stopSlide()">stop</button>
+  </div>
+</div>
+<div class = "grid">
+  <div class = "grid-item" id = "left"></div>
+  <div class = "grid-item1" id = "map"></div>
+  <div class = "grid-item" id="form1">
+    <form id = "searchForm">
+      <input type="text" placeholder="Enter Other Places" id="extra" />
+      <input type="text" placeholder="Radius" id="radius" value = "0" />
+
+      <select id="select" name="select" >
+        <option value="restaurant">Restaurant</option>
+        <option value="liquor_store">Liquor store</option>
+        <option value="cafe">Cafe</option>
+        <option value="gym">Gym</option>
+        <option value="convenience_store">Convenience store</option>
+        <option value="stadium">Stadium</option>
+        <option value="other">Other</option>
+
+      </select>
+      <input type="button" id ="query" value="Find" />
+    </form>
+    <div id = "separator"></div>
+    <form id = "directionForm">
+        <input type="radio" id="walk" name="mode" value="WALKING">
+        <label for="walk">Walk</label><br>
+
+        <input type="radio" id="drive" name="mode" value="DRIVING">
+        <label for="drive">Drive</label><br>
+
+        <input type="radio" id="transit" name="mode" value="TRANSIT">
+        <label for="transit">Transit</label>
+
+        <input type="text" placeholder="destination" id="end" />
+        <input type="button" id = "search" value="direct"  />
+
+
+    </form>
+
+  </div>
+
+</div>
+
+
+</body>
+</html>
