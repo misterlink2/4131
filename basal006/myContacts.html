@@ -15,7 +15,7 @@
   function showSlide(){
     var pic = document.getElementById("display4");
     var i = 0;
-    var imageList = ["sun.png", "QXDDJGh.jpg", "IMG_5117.PNG","pelo.jpg"]
+    var imageList = [  "QXDDJGh.jpg","sun.png","IMG_5117.PNG"]
 
     function showNewPic() {
         if (i >= imageList.length-1){
@@ -51,7 +51,7 @@
 </div>
 <h1>My Contacts</h1>
 
-<div class = "grid-container">
+<div class = "grid">
 
 <div id="div1">
   <table id = "contacts">
@@ -67,7 +67,7 @@
         <img src="sun.png" class = "pic"  id = "pic1" alt="aiai">
       </td>
       <td>leam008@umn.edu</td>
-      <td>frontier hall</td>
+      <td>701 Fulton St SE, Minneapolis, MN 55455</td>
       <td>224 475 9405</td>
       <td><a href ="https://www.google.com/maps/place/3132+James+Ave+S,+Minneapolis,+MN+55408/@44.9454115,-93.3058523,17z/data=!3m1!4b1!4m5!3m4!1s0x87f6277bd53d82c1:0xef5f879840e515ce!8m2!3d44.9454115!4d-93.3036636" >his home</a></td>
     </tr>
@@ -76,7 +76,7 @@
         <img src="IMG_5117.PNG" class = "pic"  id = "pic2" alt="aiai">
       </td>
       <td>joh6666@umn.edu</td>
-      <td>peik hall</td>
+      <td>116 Church St SE, Minneapolis, MN 55455</td>
       <td>612 650 0341</td>
       <td><a href= "https://www.google.com/maps/place/Kenneth+H.+Keller+Hall,+200+Union+St+SE,+Minneapolis,+MN+55455/@44.9747577,-93.2347029,17z/data=!4m13!1m7!3m6!1s0x52b32d17b13a375b:0x6c04b616cb83af04!2sKenneth+H.+Keller+Hall,+200+Union+St+SE,+Minneapolis,+MN+55455!3b1!8m2!3d44.9747577!4d-93.2325142!3m4!1s0x52b32d17b13a375b:0x6c04b616cb83af04!8m2!3d44.9747577!4d-93.2325142">keller hall!</a></td>
     </tr>
@@ -85,13 +85,15 @@
         <img  src="QXDDJGh.jpg" class = "pic" id = "pic3" alt="aiai">
       </td>
       <td>cleme633@umn.edu</td>
-      <td>keller hall</td>
+      <td>2106 S 4th St, Minneapolis, MN 55455</td>
       <td>847 356 2257</td>
       <td><a href="https://www.google.com/maps/place/Texas+Roadhouse/@44.8089815,-94.4884117,8z/data=!4m8!1m2!2m1!1stexas+roadhouse!3m4!1s0x52b45f170defe021:0x682b9b733db0bbed!8m2!3d45.5510401!4d-94.2202536">texas roadhouse</a></td>
     </tr>
   </table>
 </div>
 <script>
+var image = "ai.png";
+
   var map;
   var table = document.getElementById("contacts");
   var joeLocation = table.rows[1].cells[2].innerHTML;
@@ -99,8 +101,7 @@
   var derekLocation = table.rows[3].cells[2].innerHTML;
 
   var mapList = [joeLocation,andyLocation,derekLocation];
-
-
+  var nameList = ["joe","andy","derek"];
  var map;
  var service;
  var infowindow;
@@ -119,7 +120,7 @@
    var uOfM = new google.maps.LatLng(44.9783 , -93.2332 );
    infowindow = new google.maps.InfoWindow();
    map = new google.maps.Map(
-       document.getElementById('map'), {center: uOfM, zoom: 15});
+       document.getElementById('map'), {center: uOfM, zoom: 16});
 
    var geocoder = new google.maps.Geocoder();
    geocodeAddress(geocoder, map);
@@ -193,32 +194,49 @@
        }
 
  function searchQuery(directionsService, directionsRenderer){
+  var request;
    directionsRenderer.setMap(null)
     clearMarkers();
      type = document.getElementById("select").value;
      extra = document.getElementById("extra").value;
      radius = document.getElementById("radius").value;
+     if (type == "other"){
+       request = {
+           location:  {lat: currentLat, lng:  currentLng},
+           radius: radius,
+           type: type,
+           keyword: extra
+         };
+     }
+     else {
+       request = {
+           location:  {lat: currentLat, lng:  currentLng},
+           radius: radius,
+           type: type,
+
+         };
+     }
     console.log(type);
     console.log(extra);
     console.log(radius);
 
 
-    var request;
-    if(extra == null){
-      request = {
-          location:  {lat: currentLat, lng:  currentLng},
-          radius: radius,
-          type: type,
 
-        };
-    } else {
-      request = {
-          location:  {lat: currentLat, lng:  currentLng},
-          radius: radius,
-          type: type,
-          keyword: extra
-        };
-    }
+    // if(extra == null){
+    //   request = {
+    //       location:  {lat: currentLat, lng:  currentLng},
+    //       radius: radius,
+    //       type: type,
+    //
+    //     };
+    // } else {
+    //   request = {
+    //       location:  {lat: currentLat, lng:  currentLng},
+    //       radius: radius,
+    //       type: type,
+    //       keyword: extra
+    //     };
+    // }
 
 
       service = new google.maps.places.PlacesService(map);
@@ -255,6 +273,7 @@
    var marker = new google.maps.Marker({
      map: map,
      position: place.geometry.location
+
    });
    markers.push(marker);
    google.maps.event.addListener(marker, 'click', function() {
@@ -267,6 +286,10 @@
 
 
 function geocodeAddress(geocoder, resultsMap) {
+  var name1 = table.rows[1].cells[0].innerHTML;
+  var name2= table.rows[2].cells[0].innerHTML;
+  var name3 = table.rows[3].cells[0].innerHTML;
+  nameList = [name1,name2,name3];
   for (i=0;i<mapList.length;i++){
     geocoder.geocode({'address': mapList[i]}, function(results, status) {
       if (status === 'OK') {
@@ -274,11 +297,13 @@ function geocodeAddress(geocoder, resultsMap) {
                 map.setZoom(14);
                 var marker = new google.maps.Marker({
                   position: results[0].geometry.location,
-                  map: map
+                  map: map,
+                  icon:image
+
                 });
                 markers.push(marker);
                 google.maps.event.addListener(marker, 'click', function() {
-                  infowindow.setContent(results[0].formatted_address);
+                  infowindow.setContent( results[0].formatted_address);
                   infowindow.open(map, marker);
                 });
               }
@@ -293,10 +318,10 @@ function geocodeAddress(geocoder, resultsMap) {
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOxsD0SOOUU9eIQJ2P67c318MQIJ7zAYE&libraries=places&callback=initMap"
 async defer></script>
-  <div class = "grid-item">
+  <div class = "grid-item2">
     <img src="pelo.jpg" id = "display4" class = "displayDefault" alt="aiai">
-    <button onclick="showSlide()">Start</button>
-    <button onclick="stopSlide()">stop</button>
+    <button class = "button1" onclick="showSlide()">Start</button>
+    <button class = "button1" onclick="stopSlide()">stop</button>
   </div>
 </div>
 <div class = "grid">
@@ -307,13 +332,15 @@ async defer></script>
       <input type="text" placeholder="Enter Other Places" id="extra" />
       <input type="text" placeholder="Radius" id="radius" value = "0" />
 
-      <select id="select" name="select" value ="">
+      <select id="select" name="select" >
         <option value="restaurant">Restaurant</option>
         <option value="liquor_store">Liquor store</option>
         <option value="cafe">Cafe</option>
         <option value="gym">Gym</option>
         <option value="convenience_store">Convenience store</option>
         <option value="stadium">Stadium</option>
+        <option value="other">Other</option>
+
       </select>
       <input type="button" id ="query" value="Find" />
     </form>

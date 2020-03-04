@@ -55,13 +55,22 @@ html{
 .grid{
   display:grid;
   grid-gap: 50px;
+  grid-row-gap: 50px;
   grid-template-columns: auto auto auto;
 
+}
+#contacts{
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
 
 .grid-item1{
   grid-column-start: 2;
   grid-column-end: 3;
+}
+.grid-item2{
+  display:grid;
+  grid-template: auto auto/*the css validator says this is an error but this is not an error for css grid.*/;
 }
 
 table {
@@ -83,9 +92,9 @@ table {
   /* border: 1px solid #dddddd */
 }
 #table2{
+
   border:solid;
   background-color:white;
-  margin:auto;
   width:600px;
 }
 td, th {
@@ -108,8 +117,11 @@ img.display{
   display: none;
 }
 img.displayDefault{
-  height:300px;
-  width:300px;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  height:250px;
+  width:350px;
+
 }
 
 .pic{
@@ -132,4 +144,15 @@ img.displayDefault{
 #div1{
   display:inline-block;
   margin-left:100px;
+}
+.button1{
+  width:100px;
+}
+#formgrid{
+  display:grid;
+  grid-gap:25px;
+}
+.formg{
+  grid-column-start: 2;
+  grid-column-end: 3;
 }
