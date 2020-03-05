@@ -125,7 +125,8 @@ class HTTP_HeadServer: #A re-worked version of EchoServer
             ret = FORBIDDEN
         else:
             print("reee: ",resource)
-            ret = resource
+            with open(resource,"r+") as file:
+                ret =OK + file.read()
         return ret
 
 
