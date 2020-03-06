@@ -25,6 +25,8 @@ class EchoClient:
 
   def talk(self):
     msg = input('')
+    print("mesg",msg)
+
     while msg:
       self.sock.send(bytes(msg, 'utf-8'))
       msg = input('')
@@ -42,4 +44,3 @@ def parse_args():
 if __name__ == '__main__':
   (host, port) = parse_args()
   EchoClient(host, port)
-

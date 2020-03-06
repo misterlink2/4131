@@ -11,7 +11,7 @@
 #
 # This is a reworked version of EchoServer to get you started.
 # It responds correctly to a HEAD command.
-#add the following
+#add the following\
 import socket
 import os
 import stat
@@ -25,6 +25,7 @@ BUFSIZE = 4096
 CRLF = '\r\n'
 METHOD_NOT_ALLOWED = 'HTTP/1.1 405 METHOD NOT ALLOWED{}Allow: GET, HEAD, POST {}Connection: close{}{}'.format(CRLF, CRLF, CRLF, CRLF)
 OK = 'HTTP/1.1 200 OK{}{}{}'.format(CRLF, CRLF, CRLF)
+OKPICTURE = 'HTTP/1.1 200 OK{}Content-Type: image/png{}{}'.format(CRLF, CRLF, CRLF)
 NOT_FOUND = 'HTTP/1.1 404 NOT FOUND{}Connection:close{}{}'.format(CRLF, CRLF, CRLF)
 FORBIDDEN = 'HTTP/1.1 403 FORBIDDEN{}Connection:close{}{}'.format(CRLF, CRLF, CRLF)
 MOVED_PERMANENTLY = 'HTTP/1.1 301 MOVED PERMANENTLY{}Location:https://www.cs.umn.edu/{}Connection: close{}{}'.format(CRLF, CRLF, CRLF, CRLF)
@@ -78,7 +79,17 @@ class HTTP_HeadServer: #A re-worked version of EchoServer
         response=self.process_request(req) #ret string with http response
         #once we get a response, we chop it into utf encoded bytes
         #and send it (like EchoClient)
-        client_sock.send(bytes(response,'utf-8'))
+        try:
+            byte1 = bytes(response,'utf-8')
+            client_sock.send(byte1)
+
+        except (UnicodeDecodeError, AttributeError,TypeError):
+            byte2 = bytes(OKPICTURE,'utf-8')
+            print(byte2)
+            client_sock.send(byte2)
+            # client_sock.send("Accept-Ranges: bytes\r\n\r\n".encode())
+            client_sock.send(response)
+
         #clean up the connection to the client
         #but leave the server socket for recieving requests open
         client_sock.shutdown(1)
@@ -92,16 +103,32 @@ class HTTP_HeadServer: #A re-worked version of EchoServer
         linelist = request.strip().split(CRLF)
         reqline = linelist[0] #get the request line
         rlwords = reqline.split() # get list of strings on request line
+        # print("accept stuff: ", linelist[5])
+        # print("accept 0: ",linelist[5][0])
+        # print("accept 1:",linelist[5][8:13])
+
+
         if len(rlwords) == 0:
             return ''
         if rlwords[0] == 'HEAD':
             resource = rlwords[1][1:] # skip beginning /
             return self.head_request(resource)
+        elif linelist[5][8:13]== "image":
+            resource = rlwords[1][1:] # skip beginning /
+            return self.pic_request(resource)
         elif rlwords[0] == 'GET':
-            print("resource:", rlwords)
+            print("rlwords:", rlwords)
             resource = rlwords[1][1:] # skip beginning /
             print("resource",resource)
             return self.get_request(resource)
+        elif rlwords[0] == 'POST':
+            print("accept 0: ",linelist[18])
+            post = linelist[18].split('&')
+
+            print("rlwords:", rlwords)
+            resource = rlwords[1][1:] # skip beginning /
+            print("resource",resource)
+            return self.post_request(resource,post)
         else: #add ELIF checks for GET and POST before this else..
             return METHOD_NOT_ALLOWED
 
@@ -123,11 +150,58 @@ class HTTP_HeadServer: #A re-worked version of EchoServer
             ret = NOT_FOUND
         elif not check_perms(resource):
             ret = FORBIDDEN
+        # elif (resource)
         else:
-            print("reee: ",resource)
-            with open(resource,"r+") as file:
-                ret =OK + file.read()
+            with open(resource, encoding="utf8", errors='ignore') as file:
+                ret = OK + file.read()
         return ret
+
+    def pic_request(self,resource):
+        print("img request")
+        path = os.path.join('.', resource) #look in directory where serveris running
+        if not os.path.exists(resource):
+            ret = NOT_FOUND
+        elif not check_perms(resource):
+            ret = FORBIDDEN
+        # elif (resource)
+        else:
+            print ("img name:", resource)
+            print("-----------------------")
+
+            with open(resource, "rb") as file:
+                ret = file.read()
+        return  ret
+
+
+
+    def post_request(self, resource,postrequest):
+        """Handles HEAD requests."""
+        print(postrequest)
+        path = os.path.join('.', resource) #look in directory where serveris running
+        if not os.path.exists(resource):
+            ret = NOT_FOUND
+        elif not check_perms(resource):
+            ret = FORBIDDEN
+        else:
+            ret = OK
+            str1 ="<table class ="theTables">>"
+            for word in postrequest:
+                str1+= "<tr>"
+                str1=str1+"<td>" + str(word)+"</td>"
+                str1+="</tr>"
+
+            str1+="</table>"
+            str1=str1.replace("%40","@")
+            str1=str1.replace("%3A%2F%2F","://")
+            str1=str1.replace("+"," ")
+            str1=str1.replace("%2C"," ")
+
+
+
+            #tabl = html_tabl(postrequest)
+        return ret + str1
+
+
 
 
 #to do a get request, read resource contents and append to ret value.
