@@ -56,7 +56,7 @@ app.get('/',function(req, res) {
 });
 
 app.get('/welcome',function(req, res) {
-	res.sendFile(__dirname + '/welcome.html');
+	res.sendFile(__dirname + '/client/welcome.html');
 });
 
 app.get('/table',function(req,res) {
@@ -90,6 +90,7 @@ app.get('/contact',function(req, res) {
 // It serves addContact.html present in client folder
 app.get('/addContact',function(req, res) {
   //Add Details
+  res.sendFile(__dirname + '/client/addContact.html');
 });
 //GET method for stock page
 app.get('/stock', function (req, res) {
@@ -121,7 +122,6 @@ app.post('/postContact', function(req, res) {
  var place =req.body.favoritePlace;
  var url =req.body.favoritePlaceURL;
 
- console.log(row);
   var sql = "INSERT INTO `tbl_contacts` (`contact_name`, `contact_email`,`contact_address`,`contact_phone`,`contact_favoriteplace`,`contact_favoriteplaceurl`) VALUES ('" + name + "', '" + email + "','" + address + "','" + phone + "','" + place + "','" + url + "')";
   con.query(sql, function (err, result) {
   if (err) throw err;
@@ -146,6 +146,8 @@ app.post('/postContact', function(req, res) {
 // POST method to validate user login
 // upon successful login, user session is created
 app.post('/sendLoginDetails', function(req, res) {
+  console.log("name: ",req.body.name);
+  console.log("password: ",req.body.password);
   passwordValidate(req,res); 
   //Add Details
 });
@@ -163,6 +165,7 @@ app.use('/client', express.static(__dirname + '/client'));
 // function to return the 404 message and error to client
 app.get('*', function(req, res) {
   // add details
+   res.send("404 page not found");
 });
 
 
