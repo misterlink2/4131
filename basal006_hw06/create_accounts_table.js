@@ -8,9 +8,9 @@ var mysql = require("mysql");
 
 var con = mysql.createConnection({
   host: "cse-larry.cse.umn.edu",
-  user: "C4131S20UXXX", // replace with the database user provided to you
-  password: "XXXXXX", // replace with the database password provided to you
-  database: "C4131S20UXXX", // replace with the database user provided to you
+  user: "C4131S20U7", // replace with the database user provided to you
+  password: "79", // replace with the database password provided to you
+  database: "C4131S20U7", // replace with the database user provided to you
   port: 3306
 });
 
