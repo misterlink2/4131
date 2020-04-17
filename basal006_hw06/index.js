@@ -41,13 +41,11 @@ app.use(bodyparser());
 
 // use express-session
 // in mremory session is sufficient for this assignment
-/*
 app.use(session({
   secret: "csci4131secretkey",
   saveUninitialized: true,
   resave: false}
 ));
-*/
 // server listens on port 9007 for incoming connections
 app.listen(9007, () => console.log('Listening on port 9007!'));
 
@@ -63,24 +61,16 @@ app.get('/table',function(req,res) {
 	res.sendFile(__dirname + '/contact.json');
 });
 
-app.get('/addContactPage',function(req,res) {
-  //Add Details
-	res.sendFile(__dirname + '/client/addContact.html');
-});
 // // GET method route for the contact page.
 // It serves contact.html present in client folder
 app.get('/contact',function(req, res) {
   //Add Details
+   if(req.session.value){
 	res.sendFile(__dirname + '/client/contact.html');
-//con.connect(function(err) {
-  //if (err) throw err;
-  //Select all customers and return the result object:
-
- // con.query("SELECT * FROM tbl_contacts", function (err, result, fields) {
-   // if (err) throw err;
-    //console.log(result);
-   // res.send(result);
- // });
+   } else {
+    res.redirect('/welcome');
+    console.log("you must log in first");
+   }
 
 
 });
@@ -90,12 +80,22 @@ app.get('/contact',function(req, res) {
 // It serves addContact.html present in client folder
 app.get('/addContact',function(req, res) {
   //Add Details
-  res.sendFile(__dirname + '/client/addContact.html');
+   console.log(req.session.value);
+   if(req.session.value){
+	res.sendFile(__dirname + '/client/addContact.html');
+   } else {
+    res.redirect('/welcome');
+    console.log("you must log in first");
+   }
 });
 //GET method for stock page
 app.get('/stock', function (req, res) {
-        //console.log(req.session.value);
-	res.sendFile(__dirname + '/client/stock.html');
+   if(req.session.value){
+      res.sendFile(__dirname + '/client/stock.html');
+   } else {
+    res.redirect('/welcome');
+    console.log("you must log in first");
+   }
 });
 
 // GET method route for the login page.
@@ -146,8 +146,6 @@ app.post('/postContact', function(req, res) {
 // POST method to validate user login
 // upon successful login, user session is created
 app.post('/sendLoginDetails', function(req, res) {
-  console.log("name: ",req.body.name);
-  console.log("password: ",req.body.password);
   passwordValidate(req,res); 
   //Add Details
 });
@@ -156,6 +154,9 @@ app.post('/sendLoginDetails', function(req, res) {
 // destroy user session
 app.get('/logout', function(req, res) {
   //Add Details
+   req.session.value = 0;
+    res.redirect('/welcome');
+    console.log("you have been logged out");
 });
 
 // middle ware to serve static files
@@ -183,8 +184,7 @@ function passwordValidate(req,res){
         con.query('SELECT * FROM tbl_accounts WHERE acc_login = ? AND acc_password = ?', [username, password], function(error, results, fields) {
             console.log(username);
             if (results.length > 0) {
-                //req.session.value =1;
-                //res.send('Correct log in!');
+                req.session.value =1;
                res.redirect('/contact');
             } else {
                 res.send('Incorrect Username and/or Password!');
