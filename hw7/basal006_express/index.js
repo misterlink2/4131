@@ -12,6 +12,8 @@ var bodyparser = require('body-parser');
 // fs module - provides an API for interacting with the file system
 var fs = require("fs");
 
+var xml2js = require("xml2js");
+
 // helps in managing user sessions
 var session = require('express-session');
 
@@ -23,7 +25,32 @@ var mysql = require("mysql");
 
 var currentUser;
 var currentId;
+var parser = new xml2js.Parser();
+var theinfo;
+var host;
+var db;
+var pass;
+var por;
+var use;
 
+var con;
+
+fs.readFile(__dirname + '/sample_dbconfig.xml',function(err,data) {
+   if (err) throw err;
+   parser.parseString(data,function (err, result) {
+     if (err) throw err;
+     
+   theinfo = result;
+   });
+   host = theinfo.dbconfig.host[0];
+   db = theinfo.dbconfig.database[0];
+   pass = theinfo.dbconfig.password[0];
+   use = theinfo.dbconfig.user[0];
+   por = theinfo.dbconfig.port[0];
+
+});
+//i tried using the xml file but was unable to get the file to finish being read
+// before i could set variables to it.
 var con = mysql.createConnection({
   host: "cse-larry.cse.umn.edu",
   user: "C4131S20U7", // replace with the database user provided to you
@@ -32,12 +59,14 @@ var con = mysql.createConnection({
   port: 3306
 });
 
+
 con.connect(function(err) {
   if (err) {
     throw err;
   };
   console.log("Connected!");
 });
+
 // apply the body-parser middleware to all incoming requests
 app.use(bodyparser());
 
@@ -52,6 +81,7 @@ app.use(session({
 app.listen(9007, () => console.log('Listening on port 9007!'));
 
 app.get('/',function(req, res) {
+        req.session.value = 0;
 	res.sendFile(__dirname + '/client/welcome.html');
 });
 
@@ -66,6 +96,7 @@ app.get('/admin',function(req, res) {
 });
 
 app.get('/welcome',function(req, res) {
+        req.session.value = 0;
 	res.sendFile(__dirname + '/client/welcome.html');
 });
 
