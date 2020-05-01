@@ -114,7 +114,8 @@
       console.log("function()");
 
       $.get("userLogin").done(function(response) {
-        document.getElementById("userName").innerHTML = "Welcome " + response.login + "!";
+        console.log("Admin: ",response);
+        document.getElementById("userName").innerHTML = "Welcome " + response + "!";
       });
 
 

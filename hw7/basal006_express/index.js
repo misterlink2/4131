@@ -21,6 +21,7 @@ var crypto = require('crypto');
 // include the mysql module
 var mysql = require("mysql");
 
+var currentUser;
 
 var con = mysql.createConnection({
   host: "cse-larry.cse.umn.edu",
@@ -55,7 +56,12 @@ app.get('/',function(req, res) {
 
 app.get('/admin',function(req, res) {
   //Add Details
+   if(req.session.value){
 	res.sendFile(__dirname + '/client/admin.html');
+   } else {
+    res.redirect('/welcome');
+    console.log("you must log in first");
+   }
 });
 
 app.get('/welcome',function(req, res) {
@@ -108,6 +114,13 @@ app.get('/stock', function (req, res) {
 app.get('/login',function(req, res) {
   //Add Details
 	res.sendFile(__dirname + '/client/login2.html');
+});
+
+
+app.get('/userLogin',function(req, res) {
+  //Add Details
+        console.log("userLogin: ", currentUser);
+        res.send(currentUser);
 });
 
 // GET method to return the list of contacts
@@ -171,6 +184,7 @@ app.post('/addUser', function(req, res) {
     if(err) throw err;
     if(results.length > 0){
 
+    res.redirect('back');
     console.log("theres already a user with that login!: ")
     } else {
 
@@ -182,36 +196,44 @@ app.post('/addUser', function(req, res) {
     }
   });
 
-    //res.redirect('/admin');
+   // res.redirect('back');
 });
 
 app.post('/updateUser', function(req, res) {
    //console.log("updateUser: ",req);
+   var id = req.body.id;
    var name =req.body.name;
    var login =req.body.login;
    var password =req.body.password;
-/*
-  con.query('select * from `tbl_accounts` WHERE `acc_login` = ' + mysql.escape(login), function(err, results, fields) {
-    if(err) `throw err;
-
-  con.query('UPDATE `tbl_accounts` SET `acc_login` = ' + mysql.escape(login), function(err, results, fields) {
+   if (login != currentUser){
+  con.query('UPDATE `tbl_accounts` SET `acc_name` = ' + mysql.escape(name) + ', `acc_login` =' + mysql.escape(login) + ', `acc_password` = '  + mysql.escape(password) + 'WHERE `acc_id`= ' + mysql.escape(id), function(err, results, fields) {
     if(err) throw err;
   });
-*/
-    //res.redirect('/admin');
+  } else {
+    console.log("cannot update current user!");
+    res.redirect('back');
+  }
+    //res.redirect('back');
 
 });
+
 app.post('/deleteUser', function(req, res) {
    //console.log("addUser: ",req);
    var name =req.body.name;
    var login =req.body.login;
    var password =req.body.password;
-
+   console.log("currentUser: ",currentUser);
+   console.log("name: ",login);
+   if (login != currentUser){
   con.query('DELETE FROM `tbl_accounts` WHERE `acc_login` = ' + mysql.escape(login), function(err, results, fields) {
     if(err) throw err;
   });
+  } else {
+    console.log("cannot delete current user!");
+    res.redirect('back');
+  }
 
-    //res.redirect('/admin');
+   // res.redirect('back');
 });
 // POST method to validate user login
 // upon successful login, user session is created
@@ -242,8 +264,9 @@ app.get('*', function(req, res) {
 function passwordValidate(req,res){
 
     var username = req.body.name;
-    var pass = req.body.password;
-    var password = crypto.createHash('sha256').update(pass).digest('base64');
+    currentUser = username;
+    var password = req.body.password;
+    //var password = crypto.createHash('sha256').update(pass).digest('base64');
     console.log("username:");
     console.log(username);
     console.log("password:");
