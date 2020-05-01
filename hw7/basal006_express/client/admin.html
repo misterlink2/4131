@@ -128,20 +128,22 @@
     function fetchAllUsers() {
       console.log("function fetchAllUsers()");
       var url = "getUsers";
-
       $.get(url).done(function(response) {
-        formTable(response.res.userList);
+        formTable(response);
       });
 
       function formTable(response) {
+        console.log("formTable: " , response);
         var output = "";
         for (var i in response) {
+          console.log("i: ", i);
+          console.log("response[0].acc_id: ", response[0].acc_id);
           output+="<tr><td>"
-          + response[i].id
+          + response[i].acc_id
           + "</td><td>"
-          + response[i].name
+          + response[i].acc_name
           + "</td><td>"
-          + response[i].login
+          + response[i].acc_login
           + "</td><td>"
           + ""
           + "</td><td>"

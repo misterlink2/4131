@@ -53,6 +53,11 @@ app.get('/',function(req, res) {
 	res.sendFile(__dirname + '/client/welcome.html');
 });
 
+app.get('/admin',function(req, res) {
+  //Add Details
+	res.sendFile(__dirname + '/client/admin.html');
+});
+
 app.get('/welcome',function(req, res) {
 	res.sendFile(__dirname + '/client/welcome.html');
 });
@@ -111,6 +116,18 @@ app.get('/getListOfContacts', function(req, res) {
   //Add Details
 });
 
+app.get('/getUsers', function(req, res) {
+
+
+  con.query('select * from `tbl_accounts`', function(err, results, fields) {
+    if(err) throw err;
+
+
+  console.log("Index", results);
+  res.send(results);
+  });
+});
+
 // POST method to insert details of a new contact to tbl_contacts table
 app.post('/postContact', function(req, res) {
   //Add Details
@@ -143,6 +160,29 @@ app.post('/postContact', function(req, res) {
     res.redirect('/contact');
 });
 
+
+app.post('/addUser', function(req, res) {
+   //console.log("addUser: ",req);
+   var name =req.body.name;
+   var login =req.body.login;
+   var password =req.body.password;
+
+  con.query('select * from `tbl_accounts` WHERE `acc_login` = ' + mysql.escape(login), function(err, results, fields) {
+    if(err) throw err;
+    if(results.length > 0){
+
+    console.log("theres already a user with that login!: ")
+    } else {
+
+     var sql = "INSERT INTO `tbl_accounts` (`acc_name`,`acc_login`,`acc_password`) VALUES ('" + name + "', '" + login + "','" + password + "')";
+     con.query(sql, function (err, result) {
+     if (err) throw err;
+     console.log("1 record inserted, ID: " + result.insertId);
+     });
+    }
+  });
+
+});
 // POST method to validate user login
 // upon successful login, user session is created
 app.post('/sendLoginDetails', function(req, res) {
@@ -168,7 +208,6 @@ app.get('*', function(req, res) {
   // add details
    res.send("404 page not found");
 });
-
 
 function passwordValidate(req,res){
 
