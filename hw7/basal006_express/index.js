@@ -22,6 +22,7 @@ var crypto = require('crypto');
 var mysql = require("mysql");
 
 var currentUser;
+var currentId;
 
 var con = mysql.createConnection({
   host: "cse-larry.cse.umn.edu",
@@ -205,7 +206,7 @@ app.post('/updateUser', function(req, res) {
    var name =req.body.name;
    var login =req.body.login;
    var password =req.body.password;
-   if (login != currentUser){
+   if (id != currentId){
   con.query('UPDATE `tbl_accounts` SET `acc_name` = ' + mysql.escape(name) + ', `acc_login` =' + mysql.escape(login) + ', `acc_password` = '  + mysql.escape(password) + 'WHERE `acc_id`= ' + mysql.escape(id), function(err, results, fields) {
     if(err) throw err;
   });
@@ -220,9 +221,11 @@ app.post('/updateUser', function(req, res) {
 app.post('/deleteUser', function(req, res) {
    //console.log("addUser: ",req);
    var name =req.body.name;
+   var id =req.body.id;
    var login =req.body.login;
    var password =req.body.password;
-   console.log("currentUser: ",currentUser);
+   console.log("currentId: ",currentId);
+   console.log("id: ", id);
    console.log("name: ",login);
    if (login != currentUser){
   con.query('DELETE FROM `tbl_accounts` WHERE `acc_login` = ' + mysql.escape(login), function(err, results, fields) {
@@ -276,6 +279,8 @@ function passwordValidate(req,res){
         con.query('SELECT * FROM tbl_accounts WHERE acc_login = ? AND acc_password = ?', [username, password], function(error, results, fields) {
             console.log(username);
             if (results.length > 0) {
+                console.log("login: ", results[0].acc_id);
+                currentId = results[0].acc_id;
                 req.session.value =1;
                res.redirect('/contact');
             } else {
