@@ -182,6 +182,36 @@ app.post('/addUser', function(req, res) {
     }
   });
 
+    //res.redirect('/admin');
+});
+
+app.post('/updateUser', function(req, res) {
+   //console.log("updateUser: ",req);
+   var name =req.body.name;
+   var login =req.body.login;
+   var password =req.body.password;
+/*
+  con.query('select * from `tbl_accounts` WHERE `acc_login` = ' + mysql.escape(login), function(err, results, fields) {
+    if(err) `throw err;
+
+  con.query('UPDATE `tbl_accounts` SET `acc_login` = ' + mysql.escape(login), function(err, results, fields) {
+    if(err) throw err;
+  });
+*/
+    //res.redirect('/admin');
+
+});
+app.post('/deleteUser', function(req, res) {
+   //console.log("addUser: ",req);
+   var name =req.body.name;
+   var login =req.body.login;
+   var password =req.body.password;
+
+  con.query('DELETE FROM `tbl_accounts` WHERE `acc_login` = ' + mysql.escape(login), function(err, results, fields) {
+    if(err) throw err;
+  });
+
+    //res.redirect('/admin');
 });
 // POST method to validate user login
 // upon successful login, user session is created
