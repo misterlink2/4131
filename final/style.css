@@ -1,0 +1,26 @@
+.navbar {
+background-color: #563d7c;
+}
+.navbar-default .navbar-nav li a{
+color: #eee;
+}
+.navbar-default .navbar-nav li a:hover{
+color: white;
+}
+th, td{
+text-align: center;
+}
+thead {
+background-color: #e57373;
+color: white;
+}
+
+p {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  text-decoration: underline;
+  float: right;
+  font-weight: bold;
+}
